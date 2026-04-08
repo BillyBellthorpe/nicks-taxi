@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nick's Taxi — St Ives, Cornwall</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            carbon: {
+              950: '#0d0d0d',
+              900: '#111111',
+              800: '#1a1a1a',
+              700: '#222222',
+              600: '#2a2a2a',
+            },
+            papaya: {
+              300: '#FFB366',
+              400: '#FF9500',
+              500: '#FF8000',
+              600: '#E06B00',
+            },
+            neutral2: {
+              50:  '#ffffff',
+              100: '#f5f5f5',
+              200: '#eeeeee',
+              300: '#e0e0e0',
+              400: '#bbbbbb',
+              500: '#888888',
+              600: '#666666',
+              700: '#444444',
+            },
+          },
+          fontFamily: {
+            display: ['"Barlow Condensed"', 'sans-serif'],
+            body: ['Barlow', 'system-ui', 'sans-serif'],
+          },
+          letterSpacing: {
+            tightest: '0.04em',
+            tighter: '0.02em',
+            tight: '0.01em',
+          },
+        }
+      }
+    }
+  </script>
+  <style>
+    /* SVG noise grain texture */
+    .grain::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 999;
+      opacity: 0.022;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+      background-size: 128px 128px;
+    }
+
+    body {
+      font-family: 'Barlow', system-ui, sans-serif;
+      background-color: #ffffff;
+    }
+
+    .font-display {
+      font-family: 'Barlow Condensed', sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+    }
+
+    /* Hero gradient — pure black with papaya glow */
+    .hero-bg {
+      background:
+        radial-gradient(ellipse 70% 50% at 65% 25%, rgba(255,128,0,0.12) 0%, transparent 55%),
+        radial-gradient(ellipse 40% 35% at 15% 75%, rgba(255,128,0,0.06) 0%, transparent 50%),
+        linear-gradient(160deg, #0d0d0d 0%, #111111 50%, #1a1a1a 100%);
+    }
+
+    /* Card surface system */
+    .card-base {
+      background: rgba(255,255,255,0.97);
+      box-shadow:
+        0 1px 2px rgba(0,0,0,0.04),
+        0 4px 12px rgba(0,0,0,0.06),
+        0 16px 40px rgba(0,0,0,0.07);
+    }
+
+    .card-elevated {
+      background: #ffffff;
+      border: 1px solid rgba(0,0,0,0.06);
+      box-shadow:
+        0 2px 4px rgba(0,0,0,0.04),
+        0 8px 24px rgba(0,0,0,0.07),
+        0 24px 64px rgba(0,0,0,0.08);
+    }
+
+    /* Papaya accent line */
+    .gold-line {
+      background: linear-gradient(90deg, #FF8000, #FFB366, transparent);
+    }
+
+    /* Tinted image treatment */
+    .img-treatment {
+      position: relative;
+    }
+    .img-treatment::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(0,0,0,0.55) 0%, rgba(255,128,0,0.12) 100%);
+      mix-blend-mode: multiply;
+    }
+
+    /* Smooth animations */
+    .hover-lift {
+      transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.28s ease;
+    }
+    .hover-lift:hover {
+      transform: translateY(-4px);
+      box-shadow:
+        0 2px 4px rgba(0,0,0,0.05),
+        0 12px 32px rgba(0,0,0,0.10),
+        0 32px 80px rgba(0,0,0,0.10);
+    }
+
+    .btn-primary {
+      background: #FF8000;
+      transition: background 0.2s ease, transform 0.2s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.2s ease;
+      box-shadow: 0 2px 8px rgba(255,128,0,0.35), 0 8px 24px rgba(255,128,0,0.20);
+    }
+    .btn-primary:hover {
+      background: #FF9500;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(255,128,0,0.45), 0 12px 32px rgba(255,128,0,0.28);
+    }
+    .btn-primary:active {
+      transform: translateY(0);
+      background: #E06B00;
+    }
+    .btn-primary:focus-visible {
+      outline: 3px solid #FF8000;
+      outline-offset: 3px;
+    }
+
+    .btn-outline {
+      border: 1.5px solid rgba(255,255,255,0.35);
+      transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    .btn-outline:hover {
+      background: rgba(255,255,255,0.10);
+      border-color: rgba(255,255,255,0.70);
+      transform: translateY(-2px);
+    }
+    .btn-outline:active { transform: translateY(0); }
+    .btn-outline:focus-visible { outline: 3px solid #FF8000; outline-offset: 3px; }
+
+    /* Nav link */
+    .nav-link {
+      position: relative;
+      transition: color 0.2s ease;
+      font-family: 'Barlow Condensed', sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 700;
+    }
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -3px; left: 0;
+      width: 0; height: 2px;
+      background: #FF8000;
+      transition: width 0.25s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    .nav-link:hover::after { width: 100%; }
+    .nav-link:focus-visible { outline: 2px solid #FF8000; outline-offset: 4px; border-radius: 2px; }
+
+    /* Service icon wrapper */
+    .icon-wrap {
+      background: rgba(255,128,0,0.08);
+      border: 1px solid rgba(255,128,0,0.20);
+      transition: background 0.25s ease, border-color 0.25s ease, transform 0.28s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    .hover-lift:hover .icon-wrap {
+      background: rgba(255,128,0,0.15);
+      border-color: rgba(255,128,0,0.40);
+      transform: scale(1.08);
+    }
+
+    /* Section divider wave */
+    .wave-divider svg { display: block; }
+
+    /* Testimonial card */
+    .testimonial-card {
+      background: #ffffff;
+      border: 1px solid rgba(0,0,0,0.06);
+      box-shadow:
+        0 1px 2px rgba(0,0,0,0.03),
+        0 6px 20px rgba(0,0,0,0.06),
+        0 20px 52px rgba(0,0,0,0.06);
+    }
+
+    /* Stats */
+    .stat-card {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+    }
+
+    /* Coverage badge */
+    .area-badge {
+      background: rgba(255,128,0,0.08);
+      border: 1px solid rgba(255,128,0,0.22);
+      transition: background 0.2s, border-color 0.2s, transform 0.2s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    .area-badge:hover {
+      background: rgba(255,128,0,0.16);
+      border-color: rgba(255,128,0,0.40);
+      transform: translateY(-2px);
+    }
+
+    /* Phone pulse */
+    @keyframes pulse-ring {
+      0%   { transform: scale(1);   opacity: 0.6; }
+      100% { transform: scale(1.6); opacity: 0;   }
+    }
+    .pulse-ring {
+      animation: pulse-ring 2s cubic-bezier(0.215,0.61,0.355,1) infinite;
+    }
+
+    /* Papaya bottom border on footer (McLaren style) */
+    .papaya-border-top {
+      border-top: 3px solid #FF8000;
+    }
+
+    /* Scroll reveal helpers */
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+  </style>
+</head>
+<body class="grain" style="color: #111111;">
+
+  <!-- ═══════════════════════════════ NAVIGATION ═══════════════════════════════ -->
+  <header id="navbar" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300" style="background: transparent;">
+    <div class="max-w-7xl mx-auto px-6 lg:px-10 flex items-center justify-between h-20">
+      <!-- Logo -->
+      <a href="#" class="flex items-center gap-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-papaya-500 rounded-lg">
+        <div class="relative flex items-center justify-center w-10 h-10 rounded-xl" style="background: linear-gradient(135deg, #FF8000, #FF9500);">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#111111" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v2"/>
+            <circle cx="15" cy="17" r="2"/><circle cx="7" cy="17" r="2"/>
+            <path d="M17 17h2a2 2 0 0 0 2-2v-3l-3-3H5v8h2"/>
+          </svg>
+        </div>
+        <div>
+          <span class="font-display text-white text-lg leading-none tracking-tight">Nick's Taxi</span>
+          <p class="text-xs text-papaya-400 tracking-widest uppercase leading-none mt-0.5">St Ives · Cornwall</p>
+        </div>
+      </a>
+
+      <!-- Desktop Nav -->
+      <nav class="hidden md:flex items-center gap-8">
+        <a href="#services" class="nav-link text-white/80 text-sm font-medium hover:text-white">Services</a>
+        <a href="#coverage" class="nav-link text-white/80 text-sm font-medium hover:text-white">Coverage</a>
+        <a href="#about" class="nav-link text-white/80 text-sm font-medium hover:text-white">About</a>
+        <a href="#contact" class="nav-link text-white/80 text-sm font-medium hover:text-white">Contact</a>
+      </nav>
+
+      <!-- CTA -->
+      <a href="tel:+447486387746"
+         class="btn-primary hidden md:flex items-center gap-2 px-5 py-2.5 rounded-xl text-white text-sm font-semibold">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.27h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.37a16 16 0 0 0 5.7 5.7l.96-.96a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
+        </svg>
+        Call Now
+      </a>
+
+      <!-- Mobile menu button -->
+      <button id="menu-btn" class="md:hidden text-white p-2 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-papaya-500"
+              aria-label="Open menu" aria-expanded="false">
+        <svg id="menu-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Mobile menu -->
+    <div id="mobile-menu" class="hidden md:hidden" style="background: rgba(13,13,13,0.98); backdrop-filter: blur(20px);">
+      <nav class="flex flex-col px-6 py-4 gap-1">
+        <a href="#services" class="text-white/80 hover:text-white text-base py-3 border-b border-white/10 hover:text-papaya-400 transition-colors">Services</a>
+        <a href="#coverage" class="text-white/80 hover:text-white text-base py-3 border-b border-white/10 hover:text-papaya-400 transition-colors">Coverage</a>
+        <a href="#about" class="text-white/80 hover:text-white text-base py-3 border-b border-white/10 hover:text-papaya-400 transition-colors">About</a>
+        <a href="#contact" class="text-white/80 hover:text-white text-base py-3 border-b border-white/10 hover:text-papaya-400 transition-colors">Contact</a>
+        <a href="tel:+447486387746" class="btn-primary flex items-center justify-center gap-2 mt-4 px-5 py-3 rounded-xl text-white text-sm font-semibold">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.27h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.37a16 16 0 0 0 5.7 5.7l.96-.96a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
+          </svg>
+          Call Now — 07486 387 746
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ═══════════════════════════════ HERO ═══════════════════════════════ -->
+  <section class="hero-bg relative min-h-screen flex flex-col justify-center overflow-hidden">
+
+    <!-- Background image with treatment -->
+    <div class="absolute inset-0 img-treatment">
+      <img
+        src="https://placehold.co/1920x1080/111111/222222?text=St+Ives+Cornwall"
+        alt="St Ives, Cornwall harbour"
+        class="w-full h-full object-cover opacity-30"
+      />
+    </div>
+
+    <!-- Floating ambient blobs -->
+    <div class="absolute top-1/4 right-1/4 w-96 h-96 rounded-full opacity-[0.06]"
+         style="background: radial-gradient(circle, #FF8000 0%, transparent 70%); filter: blur(60px);"></div>
+    <div class="absolute bottom-1/3 left-1/5 w-80 h-80 rounded-full opacity-[0.05]"
+         style="background: radial-gradient(circle, #FF8000 0%, transparent 70%); filter: blur(50px);"></div>
+
+    <div class="relative z-10 max-w-7xl mx-auto px-6 lg:px-10 pt-32 pb-24">
+      <div class="max-w-3xl">
+
+        <!-- Label -->
+        <div class="inline-flex items-center gap-2 mb-6">
+          <div class="h-px w-8 gold-line"></div>
+          <span class="text-papaya-400 text-xs font-medium tracking-[0.18em] uppercase">St Ives, Cornwall</span>
+        </div>
+
+        <!-- Heading -->
+        <h1 class="font-display text-white leading-none mb-6"
+            style="font-size: clamp(3rem, 7vw, 5.5rem); letter-spacing: 0.01em;">
+          Your Trusted<br/>
+          <span style="color: #FF8000;">
+            Local Taxi
+          </span>
+          <br/>in West Cornwall
+        </h1>
+
+        <p class="text-white/65 text-lg mb-10 max-w-xl" style="line-height: 1.75;">
+          Reliable, comfortable, and professional taxi services across St Ives,
+          Penzance, Hayle, and all of West Cornwall — available day and night.
+        </p>
+
+        <!-- CTAs -->
+        <div class="flex flex-wrap gap-4 mb-16">
+          <a href="tel:+447486387746"
+             class="btn-primary flex items-center gap-3 px-7 py-4 rounded-xl text-white font-semibold text-base">
+            <span class="relative flex h-2.5 w-2.5">
+              <span class="pulse-ring absolute inline-flex h-full w-full rounded-full bg-white opacity-40"></span>
+              <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-white"></span>
+            </span>
+            Call 07486 387 746
+          </a>
+          <a href="#services"
+             class="btn-outline flex items-center gap-2 px-7 py-4 rounded-xl text-white font-medium text-base">
+            Our Services
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </a>
+        </div>
+
+        <!-- Stats bar -->
+        <div class="grid grid-cols-3 gap-4 max-w-lg">
+          <div class="stat-card rounded-2xl px-4 py-4 text-center">
+            <p class="font-display text-white text-2xl font-bold" style="letter-spacing: -0.03em;">15+</p>
+            <p class="text-white/50 text-xs mt-1 leading-snug">Years serving<br/>Cornwall</p>
+          </div>
+          <div class="stat-card rounded-2xl px-4 py-4 text-center">
+            <p class="font-display text-white text-2xl font-bold" style="letter-spacing: -0.03em;">24/7</p>
+            <p class="text-white/50 text-xs mt-1 leading-snug">Available<br/>any time</p>
+          </div>
+          <div class="stat-card rounded-2xl px-4 py-4 text-center">
+            <p class="font-display text-papaya-400 text-2xl font-bold" style="letter-spacing: -0.03em;">5★</p>
+            <p class="text-white/50 text-xs mt-1 leading-snug">Rated by<br/>passengers</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Wave bottom -->
+    <div class="wave-divider absolute bottom-0 left-0 right-0">
+      <svg viewBox="0 0 1440 72" preserveAspectRatio="none" width="100%" height="72">
+        <path d="M0,36 C240,72 480,0 720,36 C960,72 1200,0 1440,36 L1440,72 L0,72 Z" fill="#f5f5f5"/>
+      </svg>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════ SERVICES ═══════════════════════════════ -->
+  <section id="services" class="py-24 lg:py-32" style="background: #f5f5f5;">
+    <div class="max-w-7xl mx-auto px-6 lg:px-10">
+
+      <!-- Section header -->
+      <div class="text-center mb-16 reveal">
+        <div class="inline-flex items-center gap-2 mb-4">
+          <div class="h-px w-6" style="background: linear-gradient(90deg, transparent, #FF8000);"></div>
+          <span class="text-papaya-500 text-xs font-semibold tracking-[0.18em] uppercase">What We Offer</span>
+          <div class="h-px w-6" style="background: linear-gradient(90deg, #FF8000, transparent);"></div>
+        </div>
+        <h2 class="font-display text-zinc-900 mb-4" style="font-size: clamp(2rem, 4vw, 3rem); letter-spacing: 0.02em;">
+          Professional Taxi Services
+        </h2>
+        <p class="text-zinc-500 max-w-lg mx-auto" style="line-height: 1.75;">
+          From quick local trips to long-distance airport transfers, Nick provides a comfortable, punctual service every time.
+        </p>
+      </div>
+
+      <!-- Services grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+        <!-- Service card -->
+        <div class="hover-lift card-elevated rounded-3xl p-8 reveal" style="transition-delay: 0.05s;">
+          <div class="icon-wrap w-14 h-14 rounded-2xl flex items-center justify-center mb-6">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#FF8000" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+              <polyline points="9 22 9 12 15 12 15 22"/>
+            </svg>
+          </div>
+          <h3 class="font-display text-zinc-900 text-xl font-bold mb-3" style="letter-spacing: 0.02em;">Local Journeys</h3>
+          <p class="text-zinc-500 text-sm leading-relaxed mb-5">
+            Quick, comfortable rides across St Ives and the surrounding villages — town centre, beaches, restaurants, and more.
+          </p>
+          <div class="flex flex-wrap gap-2">
+            <span class="area-badge text-papaya-500 text-xs font-medium px-3 py-1.5 rounded-full cursor-default">St Ives Town</span>
+            <span class="area-badge text-papaya-500 text-xs font-medium px-3 py-1.5 rounded-full cursor-default">Lelant</span>
+            <span class="area-badge text-papaya-500 text-xs font-medium px-3 py-1.5 rounded-full cursor-default">Carbis Bay</span>
+          </div>
+        </div>
+
+        <!-- Airport Transfers -->
+        <div class="hover-lift card-elevated rounded-3xl p-8 reveal" style="transition-delay: 0.10s;">
+          <div class="icon-wrap w-14 h-14 rounded-2xl flex items-center justify-center mb-6">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#FF8000" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17.8 19.2L16 11l3.5-3.5C21 6 21 4 19.5 2.5c-1.5-1.5-3.5-1.5-5 0L11 6 2.8 4.2l-2.3 2.3L9 10.5 6.8 13H4l-1 1 3.5 3.5L10 21l1-1v-2.8l2.5-2.2 4.5 8.5 2.3-2.3z"/>
+            </svg>
+          </div>
+          <h3 class="font-display text-zinc-900 text-xl font-bold mb-3" style="letter-spacing: 0.02em;">Airport Transfers</h3>
+          <p class="text-zinc-500 text-sm leading-relaxed mb-5">
+            Stress-free transfers to and from Newquay Cornwall Airport — flight tracking included so we're always on time, even if your flight is delayed.
+          </p>
+          <div class="flex flex-wrap gap-2">
+            <span class="area-badge text-papaya-500 text-xs font-medium px-3 py-1.5 rounded-full cursor-default">Newquay Airport</span>
+            <span class="area-badge text-papaya-500 text-xs font-medium px-3 py-1.5 rounded-full cursor-default">Exeter Airport</span>
+          </div>
+        </div>
+
+        <!-- Station Transfers -->
+        <div class="hover-lift card-elevated rounded-3xl p-8 reveal" style="transition-delay: 0.15s;">
+          <div class="icon-wrap w-14 h-14 rounded-2xl flex items-center justify-center mb-6">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#FF8000" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="1" y="3" width="22" height="16" rx="2" ry="2"/>
+              <line x1="1" y1="9" x2="23" y2="9"/>
+              <line x1="8" y1="19" x2="8" y2="23"/>
+              <line x1="16" y1="19" x2="16" y2="23"/>
+            </svg>
+          </div>
+          <h3 class="font-display text-zinc-900 text-xl font-bold mb-3" style="letter-spacing: 0.02em;">Station Transfers</h3>
+          <p class="text-zinc-500 text-sm leading-relaxed mb-5">
+            Reliable pickups and drop-offs at St Erth, Penzance, and St Ives train stations. Early morning or late evening — no problem.
+          </p>
+          <div class="flex flex-wrap gap-2">
+            <span class="area-badge text-papaya-500 text-xs font-medium px-3 py-1.5 rounded-full cursor-default">St Erth</span>
+            <span class="area-badge text-papaya-500 text-xs font-medium px-3 py-1.5 rounded-full cursor-default">Penzance</span>
+            <span class="area-badge text-papaya-500 text-xs font-medium px-3 py-1.5 rounded-full cursor-default">St Ives</span>
+          </div>
+        </div>
+
+        <!-- Cornwall Tours -->
+        <div class="hover-lift card-elevated rounded-3xl p-8 reveal" style="transition-delay: 0.20s;">
+          <div class="icon-wrap w-14 h-14 rounded-2xl flex items-center justify-center mb-6">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#FF8000" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="2" y1="12" x2="22" y2="12"/>
+              <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+            </svg>
+          </div>
+          <h3 class="font-display text-zinc-900 text-xl font-bold mb-3" style="letter-spacing: 0.02em;">Cornwall Tours</h3>
+          <p class="text-zinc-500 text-sm leading-relaxed mb-5">
+            Explore the best of Cornwall at your own pace. Land's End, The Minack Theatre, Tate St Ives — Nick knows every hidden gem.
+          </p>
+          <div class="flex flex-wrap gap-2">
+            <span class="area-badge text-papaya-500 text-xs font-medium px-3 py-1.5 rounded-full cursor-default">Land's End</span>
+            <span class="area-badge text-papaya-500 text-xs font-medium px-3 py-1.5 rounded-full cursor-default">Minack Theatre</span>
+          </div>
+        </div>
+
+        <!-- Evening & Night -->
+        <div class="hover-lift card-elevated rounded-3xl p-8 reveal" style="transition-delay: 0.25s;">
+          <div class="icon-wrap w-14 h-14 rounded-2xl flex items-center justify-center mb-6">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#FF8000" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+            </svg>
+          </div>
+          <h3 class="font-display text-zinc-900 text-xl font-bold mb-3" style="letter-spacing: 0.02em;">Evening & Night Rides</h3>
+          <p class="text-zinc-500 text-sm leading-relaxed mb-5">
+            After a meal out or a night on the town, get home safely. Available 24 hours, 7 days a week — including bank holidays.
+          </p>
+          <div class="flex flex-wrap gap-2">
+            <span class="area-badge text-papaya-500 text-xs font-medium px-3 py-1.5 rounded-full cursor-default">24 / 7</span>
+            <span class="area-badge text-papaya-500 text-xs font-medium px-3 py-1.5 rounded-full cursor-default">Bank Holidays</span>
+          </div>
+        </div>
+
+        <!-- Wheelchair Accessible -->
+        <div class="hover-lift card-elevated rounded-3xl p-8 reveal" style="transition-delay: 0.30s;">
+          <div class="icon-wrap w-14 h-14 rounded-2xl flex items-center justify-center mb-6">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#FF8000" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="4" r="1.5"/>
+              <path d="M9 9h4l1.5 5H8.5"/>
+              <path d="M8.5 14l-1.5 5h9"/>
+              <path d="M15 19a3 3 0 1 1-6 0"/>
+            </svg>
+          </div>
+          <h3 class="font-display text-zinc-900 text-xl font-bold mb-3" style="letter-spacing: 0.02em;">Wheelchair Accessible</h3>
+          <p class="text-zinc-500 text-sm leading-relaxed mb-5">
+            Fully equipped to accommodate wheelchair users and passengers with reduced mobility. Nick ensures safe, dignified travel with all the space and time needed.
+          </p>
+          <div class="flex flex-wrap gap-2">
+            <span class="area-badge text-papaya-500 text-xs font-medium px-3 py-1.5 rounded-full cursor-default">Wheelchair Space</span>
+            <span class="area-badge text-papaya-500 text-xs font-medium px-3 py-1.5 rounded-full cursor-default">Mobility Friendly</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════ ABOUT ═══════════════════════════════ -->
+  <section id="about" style="background: #ffffff;">
+    <div class="max-w-7xl mx-auto px-6 lg:px-10 py-24 lg:py-32">
+      <div class="grid lg:grid-cols-2 gap-16 items-center">
+
+        <!-- Image side -->
+        <div class="relative reveal">
+          <div class="relative rounded-3xl overflow-hidden" style="aspect-ratio: 4/5; max-height: 560px;">
+            <img src="https://placehold.co/640x800/111111/333333?text=Nick" alt="Nick — your driver"
+                 class="w-full h-full object-cover" />
+            <!-- Gradient overlay -->
+            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"></div>
+            <!-- Caption chip -->
+            <div class="absolute bottom-6 left-6 right-6">
+              <div class="card-base rounded-2xl px-5 py-4 flex items-center gap-4">
+                <div class="w-10 h-10 rounded-xl flex-shrink-0 flex items-center justify-center" style="background: linear-gradient(135deg, #FF8000, #FF9500);">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#111111" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12"/>
+                  </svg>
+                </div>
+                <div>
+                  <p class="font-semibold text-zinc-900 text-sm">DBS Checked &amp; Fully Licensed</p>
+                  <p class="text-zinc-400 text-xs">Cornwall Council licensed taxi driver</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Floating badge -->
+          <div class="absolute -top-4 -right-4 lg:top-8 lg:-right-8 card-elevated rounded-2xl px-5 py-4 flex items-center gap-3">
+            <div class="flex -space-x-1">
+              <div class="w-7 h-7 rounded-full bg-papaya-400 flex items-center justify-center text-zinc-900 text-xs font-bold border-2 border-white">★</div>
+              <div class="w-7 h-7 rounded-full bg-papaya-400 flex items-center justify-center text-zinc-900 text-xs font-bold border-2 border-white">★</div>
+              <div class="w-7 h-7 rounded-full bg-papaya-400 flex items-center justify-center text-zinc-900 text-xs font-bold border-2 border-white">★</div>
+            </div>
+            <div>
+              <p class="font-display font-bold text-zinc-900 text-sm leading-none">5.0 Stars</p>
+              <p class="text-zinc-400 text-xs mt-0.5">200+ reviews</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Text side -->
+        <div class="reveal" style="transition-delay: 0.15s;">
+          <div class="inline-flex items-center gap-2 mb-5">
+            <div class="h-px w-6" style="background: linear-gradient(90deg, transparent, #FF8000);"></div>
+            <span class="text-papaya-500 text-xs font-semibold tracking-[0.18em] uppercase">About Nick</span>
+          </div>
+
+          <h2 class="font-display text-zinc-900 mb-6" style="font-size: clamp(1.8rem, 3.5vw, 2.8rem); letter-spacing: 0.02em; line-height: 1.1;">
+            A Familiar Face You<br/>Can Always Count On
+          </h2>
+
+          <p class="text-zinc-500 mb-5" style="line-height: 1.8; font-size: 1.0rem;">
+            Born and bred in Cornwall, Nick has been driving people around St Ives and the wider Penwith peninsula for over 15 years. He knows every backroad, shortcut, and parking spot in the area — so you'll always get there on time, the relaxed Cornish way.
+          </p>
+          <p class="text-zinc-500 mb-8" style="line-height: 1.8; font-size: 1.0rem;">
+            Friendly, reliable, and always punctual — Nick's taxi is the first call for locals and returning visitors alike. Whether you need a 5-minute ride across town or a comfortable trip to the airport, you're in safe hands.
+          </p>
+
+          <!-- Trust points -->
+          <ul class="space-y-4 mb-10">
+            <li class="flex items-start gap-3">
+              <div class="w-6 h-6 rounded-lg flex-shrink-0 flex items-center justify-center mt-0.5" style="background: rgba(232,184,0,0.15);">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#FF8000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+              <span class="text-zinc-600 text-sm" style="line-height: 1.7;">Cornwall Council licensed private hire driver with full public liability insurance</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <div class="w-6 h-6 rounded-lg flex-shrink-0 flex items-center justify-center mt-0.5" style="background: rgba(232,184,0,0.15);">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#FF8000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+              <span class="text-zinc-600 text-sm" style="line-height: 1.7;">Clean, modern, air-conditioned vehicle — comfortable for all journeys</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <div class="w-6 h-6 rounded-lg flex-shrink-0 flex items-center justify-center mt-0.5" style="background: rgba(232,184,0,0.15);">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#FF8000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+              <span class="text-zinc-600 text-sm" style="line-height: 1.7;">Cash and card payments accepted — no hidden charges, fixed prices on request</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <div class="w-6 h-6 rounded-lg flex-shrink-0 flex items-center justify-center mt-0.5" style="background: rgba(232,184,0,0.15);">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#FF8000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+              <span class="text-zinc-600 text-sm" style="line-height: 1.7;">Pre-bookings welcome — popular for early morning airport runs</span>
+            </li>
+          </ul>
+
+          <a href="tel:+447486387746"
+             class="btn-primary inline-flex items-center gap-3 px-7 py-4 rounded-xl text-white font-semibold text-base">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.27h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.37a16 16 0 0 0 5.7 5.7l.96-.96a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
+            </svg>
+            Book Your Ride
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════ COVERAGE ═══════════════════════════════ -->
+  <section id="coverage" class="py-24 lg:py-32" style="background: #f5f5f5;">
+    <div class="max-w-7xl mx-auto px-6 lg:px-10">
+      <div class="grid lg:grid-cols-2 gap-16 items-center">
+
+        <div class="reveal">
+          <div class="inline-flex items-center gap-2 mb-5">
+            <div class="h-px w-6" style="background: linear-gradient(90deg, transparent, #FF8000);"></div>
+            <span class="text-papaya-500 text-xs font-semibold tracking-[0.18em] uppercase">Coverage Area</span>
+          </div>
+
+          <h2 class="font-display text-zinc-900 mb-6" style="font-size: clamp(1.8rem, 3.5vw, 2.8rem); letter-spacing: 0.02em; line-height: 1.1;">
+            Serving All of<br/>West Cornwall
+          </h2>
+
+          <p class="text-zinc-500 mb-8" style="line-height: 1.8;">
+            Based in St Ives, Nick covers the entire Penwith peninsula and beyond. No destination too near, no journey too far.
+          </p>
+
+          <!-- Area grid -->
+          <div class="grid grid-cols-2 gap-3 mb-10">
+            <div class="flex items-center gap-3 p-4 rounded-2xl hover-lift card-base">
+              <div class="w-2 h-2 rounded-full bg-papaya-500 flex-shrink-0"></div>
+              <div>
+                <p class="font-semibold text-zinc-900 text-sm">St Ives</p>
+                <p class="text-zinc-400 text-xs">Home base</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-3 p-4 rounded-2xl hover-lift card-base">
+              <div class="w-2 h-2 rounded-full bg-papaya-500 flex-shrink-0"></div>
+              <div>
+                <p class="font-semibold text-zinc-900 text-sm">Penzance</p>
+                <p class="text-zinc-400 text-xs">~20 mins</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-3 p-4 rounded-2xl hover-lift card-base">
+              <div class="w-2 h-2 rounded-full bg-papaya-500 flex-shrink-0"></div>
+              <div>
+                <p class="font-semibold text-zinc-900 text-sm">Hayle</p>
+                <p class="text-zinc-400 text-xs">~10 mins</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-3 p-4 rounded-2xl hover-lift card-base">
+              <div class="w-2 h-2 rounded-full bg-papaya-500 flex-shrink-0"></div>
+              <div>
+                <p class="font-semibold text-zinc-900 text-sm">Carbis Bay</p>
+                <p class="text-zinc-400 text-xs">~5 mins</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-3 p-4 rounded-2xl hover-lift card-base">
+              <div class="w-2 h-2 rounded-full bg-papaya-500 flex-shrink-0"></div>
+              <div>
+                <p class="font-semibold text-zinc-900 text-sm">Lelant</p>
+                <p class="text-zinc-400 text-xs">~8 mins</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-3 p-4 rounded-2xl hover-lift card-base">
+              <div class="w-2 h-2 rounded-full bg-papaya-500 flex-shrink-0"></div>
+              <div>
+                <p class="font-semibold text-zinc-900 text-sm">Zennor</p>
+                <p class="text-zinc-400 text-xs">~12 mins</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-3 p-4 rounded-2xl hover-lift card-base">
+              <div class="w-2 h-2 rounded-full bg-papaya-500 flex-shrink-0"></div>
+              <div>
+                <p class="font-semibold text-zinc-900 text-sm">Land's End</p>
+                <p class="text-zinc-400 text-xs">~25 mins</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-3 p-4 rounded-2xl hover-lift card-base">
+              <div class="w-2 h-2 rounded-full bg-papaya-500 flex-shrink-0"></div>
+              <div>
+                <p class="font-semibold text-zinc-900 text-sm">Newquay Airport</p>
+                <p class="text-zinc-400 text-xs">~55 mins</p>
+              </div>
+            </div>
+          </div>
+
+          <p class="text-zinc-400 text-sm italic">
+            Need to go somewhere not on the list? Just call — Nick will always do his best.
+          </p>
+        </div>
+
+        <!-- Map placeholder -->
+        <div class="reveal" style="transition-delay: 0.15s;">
+          <div class="relative rounded-3xl overflow-hidden card-elevated" style="aspect-ratio: 1; max-height: 520px;">
+            <img
+              src="https://placehold.co/600x600/111111/FF8000?text=Map+of+West+Cornwall"
+              alt="Map of West Cornwall coverage area"
+              class="w-full h-full object-cover opacity-80"
+            />
+            <!-- Overlay -->
+            <div class="absolute inset-0" style="background: linear-gradient(135deg, rgba(10,15,30,0.3) 0%, transparent 60%);"></div>
+            <!-- Map pin -->
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center">
+              <div class="w-12 h-12 rounded-full flex items-center justify-center shadow-xl"
+                   style="background: linear-gradient(135deg, #FF8000, #FF9500);">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="#111111" stroke="none">
+                  <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                </svg>
+              </div>
+              <div class="mt-2 px-4 py-2 rounded-full text-white font-semibold text-sm"
+                   style="background: rgba(13,13,13,0.85); backdrop-filter: blur(8px);">
+                St Ives
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════ TESTIMONIALS ═══════════════════════════════ -->
+  <section style="background: #ffffff;" class="py-24 lg:py-32">
+    <div class="max-w-7xl mx-auto px-6 lg:px-10">
+
+      <div class="text-center mb-14 reveal">
+        <div class="inline-flex items-center gap-2 mb-4">
+          <div class="h-px w-6" style="background: linear-gradient(90deg, transparent, #FF8000);"></div>
+          <span class="text-papaya-500 text-xs font-semibold tracking-[0.18em] uppercase">Testimonials</span>
+          <div class="h-px w-6" style="background: linear-gradient(90deg, #FF8000, transparent);"></div>
+        </div>
+        <h2 class="font-display text-zinc-900 mb-4" style="font-size: clamp(2rem, 4vw, 3rem); letter-spacing: 0.02em;">
+          What Passengers Say
+        </h2>
+        <p class="text-zinc-500 max-w-md mx-auto" style="line-height: 1.75;">
+          Don't take our word for it — here's what real passengers have to say.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+        <!-- Testimonial 1 -->
+        <div class="testimonial-card rounded-3xl p-8 reveal hover-lift" style="transition-delay: 0.05s;">
+          <div class="flex gap-0.5 mb-5">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#FF8000"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#FF8000"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#FF8000"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#FF8000"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#FF8000"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </div>
+          <p class="text-navy-700/70 text-sm leading-relaxed mb-6 italic">
+            "Nick picked us up at 4:30am for an early Newquay Airport run — right on time, spotlessly clean car, and brilliant conversation on the way. Would always use him again."
+          </p>
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full flex-shrink-0" style="background: linear-gradient(135deg, #E06B00, #FF8000);"></div>
+            <div>
+              <p class="font-semibold text-zinc-900 text-sm">Sarah M.</p>
+              <p class="text-zinc-400 text-xs">St Ives resident</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Testimonial 2 -->
+        <div class="testimonial-card rounded-3xl p-8 reveal hover-lift" style="transition-delay: 0.10s;">
+          <div class="flex gap-0.5 mb-5">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#FF8000"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#FF8000"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#FF8000"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#FF8000"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#FF8000"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </div>
+          <p class="text-navy-700/70 text-sm leading-relaxed mb-6 italic">
+            "We used Nick for a full day tour of West Cornwall — Land's End, Minack Theatre, and Mousehole. His local knowledge was incredible and the car was immaculate. Highly recommend!"
+          </p>
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full flex-shrink-0" style="background: linear-gradient(135deg, #FF8000, #FF9500);"></div>
+            <div>
+              <p class="font-semibold text-zinc-900 text-sm">James &amp; Linda T.</p>
+              <p class="text-zinc-400 text-xs">Holiday visitors from Bristol</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Testimonial 3 -->
+        <div class="testimonial-card rounded-3xl p-8 reveal hover-lift" style="transition-delay: 0.15s;">
+          <div class="flex gap-0.5 mb-5">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#FF8000"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#FF8000"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#FF8000"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#FF8000"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#FF8000"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </div>
+          <p class="text-navy-700/70 text-sm leading-relaxed mb-6 italic">
+            "My elderly mum uses Nick regularly for hospital appointments in Penzance. He's always patient, helps her to the door, and gives her plenty of time. An absolute gent."
+          </p>
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full flex-shrink-0" style="background: linear-gradient(135deg, #FF8000, #E06B00);"></div>
+            <div>
+              <p class="font-semibold text-zinc-900 text-sm">Rachel H.</p>
+              <p class="text-zinc-400 text-xs">Hayle</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════ CONTACT / CTA ═══════════════════════════════ -->
+  <section id="contact" class="hero-bg relative overflow-hidden py-24 lg:py-32">
+
+    <!-- Ambient blobs -->
+    <div class="absolute top-0 left-1/3 w-96 h-96 rounded-full opacity-[0.06]"
+         style="background: radial-gradient(circle, #FF8000 0%, transparent 70%); filter: blur(80px);"></div>
+    <div class="absolute bottom-0 right-1/4 w-80 h-80 rounded-full opacity-[0.05]"
+         style="background: radial-gradient(circle, #FF8000 0%, transparent 70%); filter: blur(60px);"></div>
+
+    <div class="relative z-10 max-w-5xl mx-auto px-6 lg:px-10 text-center">
+      <div class="reveal">
+        <div class="inline-flex items-center gap-2 mb-6">
+          <div class="h-px w-8 gold-line"></div>
+          <span class="text-papaya-400 text-xs font-medium tracking-[0.18em] uppercase">Get In Touch</span>
+          <div class="h-px w-8" style="background: linear-gradient(90deg, #FFB366, transparent);"></div>
+        </div>
+
+        <h2 class="font-display text-white mb-6" style="font-size: clamp(2rem, 5vw, 4rem); letter-spacing: 0.02em; line-height: 1.0;">
+          Ready to Book<br/>Your Taxi?
+        </h2>
+
+        <p class="text-white/60 max-w-xl mx-auto mb-12 text-lg" style="line-height: 1.75;">
+          Call or text Nick directly — no apps, no queues. Just a simple, friendly conversation to get your journey sorted.
+        </p>
+
+        <!-- Contact options -->
+        <div class="grid md:grid-cols-3 gap-5 mb-12">
+
+          <!-- Phone -->
+          <a href="tel:+447486387746"
+             class="group stat-card rounded-3xl p-7 flex flex-col items-center gap-4 hover-lift focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-papaya-500">
+            <div class="relative">
+              <div class="w-14 h-14 rounded-2xl flex items-center justify-center"
+                   style="background: linear-gradient(135deg, rgba(232,184,0,0.20) 0%, rgba(232,184,0,0.10) 100%); border: 1px solid rgba(232,184,0,0.25);">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FF8000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.27h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.37a16 16 0 0 0 5.7 5.7l.96-.96a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
+                </svg>
+              </div>
+            </div>
+            <div>
+              <p class="text-white/50 text-xs uppercase tracking-widest mb-1">Call Nick</p>
+              <p class="font-display text-white font-bold text-xl" style="letter-spacing: 0.02em;">07486 387 746</p>
+              <p class="text-white/40 text-xs mt-1">Available 24 hours</p>
+            </div>
+          </a>
+
+          <!-- Text/SMS -->
+          <a href="sms:+447486387746"
+             class="group stat-card rounded-3xl p-7 flex flex-col items-center gap-4 hover-lift focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-papaya-500">
+            <div class="w-14 h-14 rounded-2xl flex items-center justify-center"
+                 style="background: linear-gradient(135deg, rgba(255,128,0,0.15) 0%, rgba(255,128,0,0.08) 100%); border: 1px solid rgba(255,128,0,0.30);">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FF8000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+              </svg>
+            </div>
+            <div>
+              <p class="text-white/50 text-xs uppercase tracking-widest mb-1">Text Nick</p>
+              <p class="font-display text-white font-bold text-xl" style="letter-spacing: 0.02em;">07486 387 746</p>
+              <p class="text-white/40 text-xs mt-1">Quick response</p>
+            </div>
+          </a>
+
+          <!-- Location -->
+          <div class="stat-card rounded-3xl p-7 flex flex-col items-center gap-4">
+            <div class="w-14 h-14 rounded-2xl flex items-center justify-center"
+                 style="background: linear-gradient(135deg, rgba(255,128,0,0.15) 0%, rgba(255,128,0,0.08) 100%); border: 1px solid rgba(255,128,0,0.30);">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FF8000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                <circle cx="12" cy="10" r="3"/>
+              </svg>
+            </div>
+            <div>
+              <p class="text-white/50 text-xs uppercase tracking-widest mb-1">Based In</p>
+              <p class="font-display text-white font-bold text-xl" style="letter-spacing: 0.02em;">St Ives</p>
+              <p class="text-white/40 text-xs mt-1">West Cornwall</p>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Big CTA -->
+        <a href="tel:+447486387746"
+           class="btn-primary inline-flex items-center gap-3 px-10 py-5 rounded-2xl text-white font-bold text-lg">
+          <span class="relative flex h-3 w-3">
+            <span class="pulse-ring absolute inline-flex h-full w-full rounded-full bg-white opacity-30"></span>
+            <span class="relative inline-flex rounded-full h-3 w-3 bg-white"></span>
+          </span>
+          Call 07486 387 746
+        </a>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════ FOOTER ═══════════════════════════════ -->
+  <footer style="background: #0d0d0d;" class="py-12 papaya-border-top">
+    <div class="max-w-7xl mx-auto px-6 lg:px-10">
+      <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+
+        <!-- Logo -->
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-xl flex items-center justify-center" style="background: linear-gradient(135deg, #FF8000, #FF9500);">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#111111" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v2"/>
+              <circle cx="15" cy="17" r="2"/><circle cx="7" cy="17" r="2"/>
+              <path d="M17 17h2a2 2 0 0 0 2-2v-3l-3-3H5v8h2"/>
+            </svg>
+          </div>
+          <div>
+            <p class="font-display text-white text-base leading-none">Nick's Taxi</p>
+            <p class="text-papaya-500 text-xs tracking-widest uppercase leading-none mt-0.5">St Ives · Cornwall</p>
+          </div>
+        </div>
+
+        <!-- Nav links -->
+        <nav class="flex gap-6 text-sm text-white/40 flex-wrap justify-center">
+          <a href="#services" class="hover:text-white/70 transition-colors focus-visible:text-white">Services</a>
+          <a href="#coverage" class="hover:text-white/70 transition-colors focus-visible:text-white">Coverage</a>
+          <a href="#about" class="hover:text-white/70 transition-colors focus-visible:text-white">About</a>
+          <a href="#contact" class="hover:text-white/70 transition-colors focus-visible:text-white">Contact</a>
+          <a href="tel:+447486387746" class="hover:text-white/70 transition-colors focus-visible:text-white">07486 387 746</a>
+        </nav>
+
+        <!-- Copyright -->
+        <p class="text-white/25 text-xs text-center">
+          &copy; 2026 Nick's Taxi, St Ives, Cornwall
+        </p>
+
+      </div>
+    </div>
+  </footer>
+
+  <!-- ═══════════════════════════════ SCRIPTS ═══════════════════════════════ -->
+  <script>
+    // Navbar scroll behaviour
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 60) {
+        navbar.style.background = 'rgba(13,13,13,0.97)';
+        navbar.style.backdropFilter = 'blur(20px)';
+        navbar.style.boxShadow = '0 1px 0 rgba(255,255,255,0.04), 0 4px 24px rgba(0,0,0,0.25)';
+      } else {
+        navbar.style.background = 'transparent';
+        navbar.style.backdropFilter = 'none';
+        navbar.style.boxShadow = 'none';
+      }
+    }, { passive: true });
+
+    // Mobile menu toggle
+    const menuBtn = document.getElementById('menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    menuBtn.addEventListener('click', () => {
+      const isOpen = !mobileMenu.classList.contains('hidden');
+      mobileMenu.classList.toggle('hidden');
+      menuBtn.setAttribute('aria-expanded', String(!isOpen));
+    });
+
+    // Close mobile menu on link click
+    mobileMenu.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        mobileMenu.classList.add('hidden');
+        menuBtn.setAttribute('aria-expanded', 'false');
+      });
+    });
+
+    // Scroll reveal
+    const revealEls = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          observer.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+    revealEls.forEach(el => observer.observe(el));
+
+    // Smooth scroll
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', e => {
+        const target = document.querySelector(a.getAttribute('href'));
+        if (target) {
+          e.preventDefault();
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+  </script>
+</body>
+</html>
